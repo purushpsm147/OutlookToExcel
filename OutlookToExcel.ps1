@@ -1,5 +1,5 @@
 #Params
-$Account = "hkannan@techsoup.org"
+$Account = "YourMail@account.com"
 $Folder = "Inbox"
 
 
