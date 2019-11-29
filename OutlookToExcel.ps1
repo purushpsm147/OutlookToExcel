@@ -1,5 +1,5 @@
-﻿#Params
-$Account = "yourmail@account.com"
+#Params
+$Account = "hkannan@techsoup.org"
 $Folder = "Inbox"
 
 
@@ -16,8 +16,8 @@ $OutlookNS = $Outlook.GetNamespace("MAPI")
 
 
 #Word Com object
-#$Word=NEW-Object –comobject Word.Application
-#$Word.Visible = $True  # setting visibility to true
+$Word=NEW-Object –comobject Word.Application
+$Word.Visible = $True  # setting visibility to true
 
 
 #Excel Com object
@@ -28,8 +28,8 @@ $Excel.Visible = $True  # setting visibility to true
 
 
 #adding and selecting new doc page
-#$doc = $word.documents.Add()
-#$myDoc = $word.Selection
+$doc = $word.documents.Add()
+$myDoc = $word.Selection
 
 
 #adding and and selecting new excel page
@@ -45,7 +45,7 @@ $AllEmails = $OutlookNS.Folders.Item($Account).Folders.Item($Folder).Items
 
 
 #Filter to emails with date range
-$ReportsEmails = $AllEmails | where { ($_.ReceivedTime -ge [datetime]"11-01-2019" -AND $_.ReceivedTime -lt ` [datetime]"11-26-2019") -and ($_.SenderName -match "Siva Murugaperumal" )}
+$ReportsEmails = $AllEmails | where { ($_.ReceivedTime -ge [datetime]"11-01-2019" -AND $_.ReceivedTime -lt ` [datetime]"11-29-2019") -and ($_.SenderName -match "Siva Murugaperumal" )}
 # (($_.Subject -match $RegexSubjMatch) -or ($_.Subject -match "E-Scrum"))
 
 
@@ -57,6 +57,7 @@ $row2 = 2
 $row1 = 2
 
 foreach ($mail in $LatestReportEmail){
+$mailDate = $mail | Select-Object -Property ReceivedTime 
 $mailbody = $mail | Select-Object -Property Body | Format-List
 $bodytext = $mailbody | Out-String
 $bodytext = $bodytext |  ForEach-Object {$_.Trim() -replace "\s+", "_" }
@@ -78,12 +79,19 @@ $myXlSheet.Cells.Item(1,2) = "Tasks"
 $myXlSheet.Cells.Item(1,3) = "Hours"
 
 
+$myDoc.TypeText($mailDate)
+$myDoc.TypeParagraph()
+$myDoc.TypeParagraph()
 
 foreach($item in $TaskArray){
  $myXlSheet.Cells.Item($row1,2) = $item.Replace("_"," ") 
+ $myDoc.TypeText($item.Replace("_"," "))
+ $myDoc.TypeParagraph()
  $row1++
 }
 
+$myDoc.TypeParagraph()
+$myDoc.TypeParagraph()
 
 
 foreach($item in $hourslist){
