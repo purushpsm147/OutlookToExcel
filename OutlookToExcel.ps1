@@ -2,7 +2,6 @@
 $Account = "YourMail@account.com"
 $Folder = "Inbox"
 
-
 #specify the month and year to get the monthly timesheet
 #later We can get the current mont and year automatically
 #$RegexSubjMatch = "Offshore Work Status -\sNov\s\d+,\s2019"
@@ -79,8 +78,16 @@ $myXlSheet.Cells.Item(1,2) = "Tasks"
 $myXlSheet.Cells.Item(1,3) = "Hours"
 
 
-$myDoc.TypeText($mailDate)
+$myDoc.TypeText($mailDate.ReceivedTime)
+
 $myDoc.TypeParagraph()
+
+foreach($item in $hourslist){
+ $myXlSheet.Cells.Item($row2,3) = $item
+ $myDoc.TypeText($item + "`t")
+ $row2++
+}
+
 $myDoc.TypeParagraph()
 
 foreach($item in $TaskArray){
@@ -94,10 +101,7 @@ $myDoc.TypeParagraph()
 $myDoc.TypeParagraph()
 
 
-foreach($item in $hourslist){
- $myXlSheet.Cells.Item($row2,3) = $item
- $row2++
-}
+
 
 
 #$myDoc.TypeText($bodytext)
@@ -105,23 +109,3 @@ foreach($item in $hourslist){
 #$myDoc.TypeParagraph()
 
 }
-
-
-
-
-
-
-
-
-
-
-#$Outlook.Quit()
-#$null = [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$word)
-#[gc]::Collect()
-#[gc]::WaitForPendingFinalizers()
-#Remove-Variable word
-
-#$null = [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$Excel)
-#[gc]::Collect()
-#[gc]::WaitForPendingFinalizers()
-#Remove-Variable Excel
